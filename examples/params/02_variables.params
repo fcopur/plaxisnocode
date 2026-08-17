@@ -1,0 +1,34 @@
+# Example 2 — variables and expressions.
+#
+# Define reusable values in a [variables] section (names start with $) and use
+# them — with arithmetic — anywhere below. This keeps related dimensions in one
+# place: change $half_width once and the contour, cap and load all follow.
+#
+#     python run.py examples/params/02_variables.params
+#
+# Expressions allow  + - * / // % **  and parentheses only (no function calls),
+# so they are safe to evaluate and plain text like "Hardening Soil" is never
+# mistaken for a formula.
+
+[variables]
+$half_width = 6            # half the plan width of the raft
+$box        = 5 * $half_width   # soil box reaches 5x the raft half-width
+$slab_depth = -0.5
+
+[project]
+title = parametric_raft
+
+[soil_contour]
+x_min = -$box              # -30
+y_min = -$box
+x_max = $box               #  30
+y_max = $box
+
+# raft body sized from $half_width, thickness from $slab_depth
+[soil_block:slab]
+corners = (-$half_width, $half_width, 0), ($half_width, $half_width, 0), ($half_width, -$half_width, 0), (-$half_width, -$half_width, 0)
+extrude_z = $slab_depth
+material = dolgu
+
+[output]
+filename = parametric_raft.p3d

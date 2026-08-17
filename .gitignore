@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Plaxis reference command logs (large, user-supplied; keep only the README)
+p3d/*
+!p3d/README.md
+
+# Generated at runtime (run logs stay local: they carry absolute paths from
+# whichever machine ran Plaxis, and the assistant reads them from disk anyway)
+output/
+log/

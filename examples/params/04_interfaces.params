@@ -1,0 +1,36 @@
+# Example override: add interfaces + phase iteration control + a water step,
+# on top of defaults.params. Reproduces the extra features in the newer
+# p3d/ samples (step2 / step3): a positive interface on the pile-cap, a
+# horizontal interface at the pile-toe depth (with soil material), those
+# interfaces activated in phase 1, MaxSteps = 250 on both phases, and a
+# _gotowater step before staging.
+#
+#   python run.py --dry-run examples/params/04_interfaces.params
+
+[project]
+title = interfaces_demo
+
+# turn the two optional interfaces on (defined, but disabled, in defaults)
+[interface:cap]
+enabled = true            # positive interface on the [plate:cap]
+
+[interface:toe]
+enabled = true            # horizontal interface at the pile toe (-12.4 m)
+material = kum            # assign the natural soil to the interface
+
+# record the water step some models keep before staged construction
+[water]
+enabled = true
+
+# phase 1: also activate the interfaces, and cap the iteration count
+[phase:1]
+activate = EmbeddedBeams, Geogrids, Interfaces
+use_default_iteration_params = false
+max_steps = 250
+
+[phase:2]
+use_default_iteration_params = false
+max_steps = 250
+
+[run]
+select_mesh_points = true

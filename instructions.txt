@@ -1,0 +1,24 @@
+1-Bir kum zemin (Dr %15 ya da Çok Gevsek-Gevsek) içerisinde sabit kaziklar arasi mesafe (3D)
+altinda belirli bir kazik uzunlugu (L=12m) için belirli bir dolgu kalinliginda (0.5D, 1.0D, 1.5D ve
+2.0D) ve her bir dolgu kalinligi için dolgu parametresinde 3 farkli dane orani (clay sands, silty sands)
+(11-13 , 5-5 , 5-20) durumlarinda analiz incelenecektir. 12 adet analiz
+Bu yukarıda belirtilen 12 analizin her birinde dolgu kalınlığının orta derinliğinde geogrid tanımlanacak
+ve tanımlanan geogridlerin çekme rijitlikleri 800-1200-1600 kn/m olmak üzere 3 farklı şekilde
+incelenecektir. 36 adet analiz
+Belirtilen analizler kazik çapi D=65cm ve 80cm için yapilacaktir.
+2-Bir kum zemin (Dr %35 ya da orta sıkı) içerisinde sabit kaziklar arasi mesafe (3D) altinda belirli bir
+kazik uzunlugu (L=12m) için belirli bir dolgu kalinliginda (0.5D, 1.0D, 1.5D ve 2.0D) ve her bir dolgu
+kalinligi için dolgu parametresinde 3 farkli dane orani (clay sands, silty sands) (11-13 , 5-5 , 5-20)
+durumlarinda analiz incelenecektir. 12 adet analiz
+Bu yukarıda belirtilen 12 analizin her birinde dolgu kalınlığının orta derinliğinde geogrid tanımlanacak
+ve tanımlanan geogridlerin çekme rijitlikleri 800-1200-1600 kn/m olmak üzere 3 farklı şekilde
+incelenecektir. 36 adet analiz
+Belirtilen analizler kazik çapi D=65cm ve 80cm için yapilacaktir.
+3-Bir kum zemin (Dr %65 ya da sıkı) içerisinde sabit kaziklar arasi mesafe (3D) altinda belirli bir
+kazik uzunlugu (L=12m) için belirli bir dolgu kalinliginda (0.5D, 1.0D, 1.5D ve 2.0D) ve her bir dolgu
+kalinligi için dolgu parametresinde 3 farkli dane orani (clay sands, silty sands) (11-13 , 5-5 , 5-20)
+durumlarinda analiz incelenecektir. 12 adet analiz
+Bu yukarıda belirtilen 12 analizin her birinde dolgu kalınlığının orta derinliğinde geogrid tanımlanacak
+ve tanımlanan geogridlerin çekme rijitlikleri 800-1200-1600 kn/m olmak üzere 3 farklı şekilde
+incelenecektir. 36 adet analiz
+Belirtilen analizler kazik çapi D=65cm ve 80cm için yapilacaktir.

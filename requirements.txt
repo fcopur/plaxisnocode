@@ -1,0 +1,25 @@
+# Runtime dependencies for plaxisnocode: there are none to install.
+#
+# The library itself uses only the Python standard library (configparser,
+# argparse, logging, ast, itertools, dataclasses) — Python 3.7+. Everything
+# except a live build (parsing, merging, variables, loops, --dry-run
+# validation, tools/mock_build.py) works with a bare Python.
+#
+# Driving a real Plaxis 3D session additionally needs Plaxis' own scripting
+# package, `plxscripting`. It is deliberately NOT listed as an installable
+# requirement below, because you should not pip-install it:
+#
+#   * It ships with your Plaxis installation. The easiest and intended path is
+#     to run these scripts with the Python interpreter bundled with Plaxis,
+#     which already has it — then this file is irrelevant.
+#   * The `plxscripting` name on PyPI is a third-party republish, not a package
+#     published by Bentley, and it carries the Plaxis Public License (PPL-1.0),
+#     a reciprocal licence quite unlike this project's MIT. Pulling it in
+#     unknowingly is not something a requirements file should do for you.
+#
+# If you really must install it into your own environment, do so explicitly and
+# with your eyes open:
+#
+#   pip install plxscripting setuptools
+#
+# (`setuptools` provides the distutils shim plxscripting needs on Python 3.12+.)

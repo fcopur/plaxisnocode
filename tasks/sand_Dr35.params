@@ -1,0 +1,67 @@
+# Group 2 — Sand, Dr = 35 % ("Kum orta sıkı").  96 models:
+#   (4 fill thicknesses x 2 diameters, with their pile capacities)
+#     x 3 grain ratios x (no geogrid + 3 stiffnesses)
+#   python run.py --dry-run tasks/sand_Dr35.params
+#
+# The pile capacity table below is EXACTLY the supplied data for the
+# medium-dense sand: for every (fill thickness, diameter) pair its own
+# embedded-beam Fmax and Multi-linear axial skin resistance. The natural-
+# ground (kum) values are inherited from defaults.params — no placeholders.
+
+[loop]
+# each row: fill mult, diameter D, then that pair's pile capacity data
+# (leading '_' = used in the model, left out of the model's name):
+#   _FMax                      pile tip capacity (kN)
+#   _zh, _Ts1                  skin table: depth + resistance at the pile head
+#   _zm, _Ts2                  ... at the break point (and below)
+#   _zt                        ... at the pile toe
+$mult, $D, $_FMax, $_zh, $_Ts1, $_zm, $_Ts2, $_zt = {
+    (0.5, 0.65, 3594, 0.33,  2.45, 4.89, 33.04, 12.33),
+    (1.0, 0.65, 3700, 0.65,  4.90, 5.21, 35.50, 12.65),
+    (1.5, 0.65, 3806, 0.98,  7.36, 5.54, 37.95, 12.98),
+    (2.0, 0.65, 3913, 1.30,  9.81, 5.86, 40.40, 13.30),
+    (0.5, 0.80, 5677, 0.40,  3.71, 6.01, 50.05, 12.40),
+    (1.0, 0.80, 5883, 0.80,  7.43, 6.41, 53.77, 12.80),
+    (1.5, 0.80, 6088, 1.20, 11.14, 6.81, 57.48, 13.20),
+    (2.0, 0.80, 6293, 1.60, 14.86, 7.21, 61.20, 13.60)}
+$clay, $silt = {(11, 13), (5, 5), (5, 20)} # fill grain ratio (dane oranı):
+                                           #   ClayFraction-SiltFraction pairs
+$ea = {0, 800, 1200, 1600}                 # geogrid stiffness kN/m; 0 = none
+
+[variables]
+$t   = $mult * $D                # fill-layer thickness (m)
+$mid = -0.5 * $t                 # geogrid depth = mid-fill
+$s   = 3 * $D                    # pile spacing = 3D
+$L   = 12                        # pile length (m)
+
+[project]
+title = sand_Dr35                # -> sand_Dr35_mult0.5_D0.65_clay11_silt13_ea0, ...
+
+# --- fill grain ratio (the 'dane oranı' study dimension) -----------------
+[soil_material:dolgu]
+ClayFraction = $clay
+SiltFraction = $silt
+
+# --- geogrid: off when $ea = 0, else at mid-fill with EA1 = $ea ----------
+[geogrid_material:geogrid]
+enabled = $ea
+EA1 = $ea
+
+[geogrid:base]
+enabled = $ea
+corners = (-5, -5, $mid), (-5, 5, $mid), (5, 5, $mid), (5, -5, $mid)
+
+# --- pile: capacities straight from the loop table -----------------------
+[embedded_beam_material:kazık]
+Diameter = $D
+FMax = $_FMax
+MultiLinearAxialSkinResistance = "[$_zh, $_Ts1, $_zm, $_Ts2, $_zt, $_Ts2]"
+
+[soil_block:slab]
+extrude_z = -$t
+
+[pile_grid:main]
+x_spacing = $s
+y_spacing = $s
+top_z = -$t                      # pile head at fill (slab) bottom
+length = $L                      # pile length (m); toe = top_z - length

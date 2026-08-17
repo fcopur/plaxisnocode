@@ -1,0 +1,313 @@
+#######################################################################
+#  Plaxis 3D model parameters — DEFAULTS
+#  ---------------------------------------------------------------
+#  This is the base model, used automatically when you run:
+#
+#      python run.py            # builds this file as-is
+#
+#  To change only a few values, DON'T edit this file. Instead write a
+#  small override file with just the sections/keys you want to change
+#  (see examples/params/01_change_values.params) and run:
+#
+#      python run.py my_model.params
+#
+#  The override is merged ON TOP of these defaults: sections/keys it
+#  omits keep the values below.
+#
+#  Syntax:
+#    key = value            # numbers, text, true/false, none
+#    key = a, b, c          # comma list (only for: layers, activate,
+#                           #             deactivate, refine, soil_block)
+#    key = (x,y,z), (x,y,z) # list of points (corners)
+#    key = "[1, 2, 3]"      # quoted -> passed to Plaxis as literal text
+#    #  ... = comment       # '#' starts a comment (full line or inline)
+#
+#  Variables & expressions (handy in override files):
+#    [variables]
+#    $k = 50                # define a variable
+#    $depth = -2 * $k       # may reference earlier variables
+#    ...
+#    x_min = -$k            # use it anywhere; arithmetic is evaluated
+#    (+ - * / // % ** and parentheses; no functions/names -> safe)
+#
+#  Batch runs (override files only):
+#    [loop]
+#    $bh = {50, 60, 70}     # each loop line gets a set of values
+#    $gu = {20, 40}
+#    $a, $b = {(1, 2), (3, 4)}   # several variables varying TOGETHER
+#    ...
+#    head = -$bh            # loop vars are usable like variables
+#    A model is built for every combination of the loop LINES (here
+#    3x2x2 = 12; the ($a,$b) pairs stay together — they are one
+#    dimension, not two). Each project title (and .p3d filename) is
+#    auto-suffixed, e.g. <title>_bh50_gu20_a1_b2. A zipped name that
+#    starts with '_' (e.g. $_FMax) is data riding along the line: it
+#    works as a variable but stays out of the model name.
+#
+#  Toggle a section on/off with the meta-key 'enabled' (any section):
+#    [geogrid:base]
+#    enabled = $ea         # 0/false -> section skipped; else -> built
+#    Combined with a loop ($ea = {0, 800, 1200, 1600}), this makes a
+#    feature's presence (and value) another sweep dimension.
+#
+#  Sections are applied top-to-bottom, so define materials BEFORE the
+#  structures that use them. Sections named [kind:name] (e.g.
+#  [soil_material:kum]) can be repeated with different names. Delete a
+#  section to skip that feature (e.g. remove [geogrid:*] for no geogrid).
+#
+#  This template reproduces  p3d/new/model step3'geogrid.p3d
+#  (and, with [geogrid:base] disabled, p3d/new/model step3 ıdı%10.p3d).
+#######################################################################
+
+
+# ── connection to the Plaxis Input scripting server ─────────────────
+[connection]
+host = localhost
+port = 10000            # Expert > Configure remote scripting server
+password =              # leave empty if no password is set
+output_port = 10001     # the Plaxis OUTPUT scripting server — used to select
+                        # the curve node before calculating (see [run])
+
+
+# ── project metadata + units + model type ───────────────────────────
+[project]
+title = model
+company = only@ ::LAVteam::®
+comments =
+unit_force = kN         # options: N | kN | MN | lb | kip | ton | tonf
+unit_length = m         # options: m | cm | mm | ft | in
+unit_time = day         # options: s | min | hr | day
+water_weight = 10       # unit weight of water, in force/length^3
+model_type = Full       # options: Full | Axisymmetric
+element_type = 10-Noded # options: 10-Noded | 15-Noded
+
+
+# ── rectangular soil contour (plan view, x-y) ───────────────────────
+[soil_contour]
+x_min = -25
+y_min = -25
+x_max = 25
+y_max = 25
+
+
+# ── borehole + stratigraphy ─────────────────────────────────────────
+[borehole]
+x = 0
+y = 0
+head = -60              # groundwater head elevation; use 'none' to skip
+layers = -60            # layer BOTTOM elevations, top-to-bottom.
+                        #   one layer:  layers = -60
+                        #   three:      layers = -10, -30, -60
+
+
+# ── soil materials  [soil_material:<identification>] ────────────────
+#  soil_model options: Mohr-Coulomb | Hardening Soil | HS small |
+#                      Soft Soil | Soft Soil Creep | Linear Elastic |
+#                      Modified Cam-Clay | ...
+#  DrainageType options: Drained | Undrained A | Undrained B |
+#                        Undrained C | Non-porous
+#  Any Plaxis soil property may be added as key = value (names are
+#  case-sensitive, exactly as in the Plaxis command log).
+
+# the fill (embankment) placed on top of the piles in phase 1.
+# ClayFraction/SiltFraction are the fill's grain fractions ("dane oranı")
+# — the study varies them in pairs: 11-13, 5-5, 5-20.
+[soil_material:dolgu]
+soil_model = Hardening Soil
+gammaUnsat = 17.6
+gammaSat = 17.6
+E50Ref = 39000
+PowerM = 0.497
+cRef = 0.0001
+phi = 36
+psi = 6.125
+InterfaceStrengthDetermination = Manual
+Rinter = 0.7
+ClayFraction = 5
+SiltFraction = 5
+
+# the natural ground: medium-dense sand ("Kum orta sıkı", Dr = 35 %)
+[soil_material:kum]
+soil_model = Hardening Soil
+gammaUnsat = 15.65
+gammaSat = 15.65
+E50Ref = 14600
+cRef = 0.3
+phi = 36.4
+psi = 4
+UseDefaults = false
+K0NC = 0.407
+InterfaceStrengthDetermination = Manual
+Rinter = 0.7
+POP = 362.5
+
+
+# ── geogrid material  [geogrid_material:<identification>] ───────────
+#  material_type options: Elastic | Elastoplastic
+#  EA1 = tensile stiffness (kN/m); the study uses 800 / 1200 / 1600.
+[geogrid_material:geogrid]
+EA1 = 800
+
+
+# ── plate material  [plate_material:<identification>] ───────────────
+#  material_type options: Elastic | Elastoplastic
+[plate_material:temel]
+Gamma = 24
+E1 = 32000000
+StructNu12 = 0.2
+D3d = 0.76              # equivalent thickness (m)
+
+
+# ── embedded-beam (pile) material  [embedded_beam_material:<id>] ────
+#  material_type options: Elastic | Elastoplastic
+#  The skin resistance is Multi-linear: the quoted "[...]" is passed to
+#  Plaxis verbatim, as (depth, resistance) pairs — depths measured from
+#  the ground surface, so the table must track the pile (head = fill
+#  bottom, toe = head + length). These values are for D = 0.80 m.
+[embedded_beam_material:kazık]
+Gamma = 9.35
+Diameter = 0.8
+E = 23500000
+AxialSkinResistance = Multi-linear
+MultiLinearAxialSkinResistance = "[0.4, 3.71, 6.01, 50.05, 12.4, 50.05]"
+FMax = 5677
+
+
+# ── assign a material to the borehole soil layer ────────────────────
+[layer]
+material = kum          # must match a [soil_material:*] identification
+# index = -1            # which layer (0-based); -1 = last (default)
+
+
+# ── STRUCTURES (applied in the order they appear below) ─────────────
+
+# fill cap: a surface extruded into a soil volume, extrude_z thick
+# (downward from z = 0), so its bottom is at z = extrude_z
+[soil_block:slab]
+corners = (-5,5,0), (5,5,0), (5,-5,0), (-5,-5,0)
+extrude_z = -0.4        # signed height; negative = downward
+material = dolgu
+
+# raft: a flat structural plate on top of the fill cap
+[plate:cap]
+corners = (-5,-5,0), (-5,5,0), (5,5,0), (5,-5,0)
+material = temel
+
+# embedded-beam pile grid: a fixed nx x ny group, centred in plan.
+# The grid is defined by its COUNT and SPACING (not by an edge distance), so
+# the pile count stays 4x4 even when the spacing changes with pile diameter
+# (spacing = 3 x Diameter). Here: 4x4 = 16 piles.
+#   top_z  = pile head elevation — should equal the fill (slab) bottom, so the
+#            piles start where the fill ends.
+#   length = pile length downward; the toe is top_z - length (here -0.4 - 12
+#            = -12.4). Give 'bottom_z' instead if you prefer an absolute toe.
+#   connection = pile-head connection: Free | Hinged | Rigid
+[pile_grid:main]
+nx = 4                  # number of piles along x
+ny = 4                  # number of piles along y
+x_spacing = 2.4         # centre-to-centre in x (= 3 x pile diameter)
+y_spacing = 2.4         # centre-to-centre in y
+x_center = 0            # grid centre in plan (defaults to 0)
+y_center = 0
+top_z = -0.4            # pile head = fill (slab) bottom
+length = 12             # pile length (m); toe = top_z - length
+material = kazık
+connection = Free
+
+# surface load on the cap footprint (delete this section to omit it)
+[surface_load:top]
+corners = (-5,-5,0), (-5,5,0), (5,5,0), (5,-5,0)
+sigz = -400             # pressure in z (negative = downward)
+# sigx = 0
+# sigy = 0
+
+# larger surrounding soil block (refinement zone around the piles);
+# same material as the natural ground
+[soil_block:fill]
+corners = (-6,6,0), (6,6,0), (6,-6,0), (-6,-6,0)
+extrude_z = -12
+material = kum
+
+# geogrid surface at MID-DEPTH of the fill (delete or disable to omit)
+[geogrid:base]
+corners = (-5,-5,-0.2), (-5,5,-0.2), (5,5,-0.2), (5,-5,-0.2)
+material = geogrid
+
+
+# ── interfaces (optional; OFF by default) ───────────────────────────
+#  An interface improves soil-structure contact. Give EITHER:
+#    on      = <plate name>     attach to a named [plate:*] (e.g. the cap)
+#    corners = (x,y,z), ...     build a surface and put an interface on it
+#  side     = positive | negative   (default: positive)
+#  material = <soil material>   (optional) assign a material to the interface
+#  Enable a section (enabled = true) to build it, and add 'Interfaces' to a
+#  phase's 'activate' list. (The p3d/new reference models have none — the
+#  Rinter values live on the soil materials instead.)
+[interface:cap]
+enabled = false
+on = cap
+
+[interface:toe]
+enabled = false
+corners = (-5,5,-12.4), (5,5,-12.4), (5,-5,-12.4), (-5,-5,-12.4)
+material = kum
+
+
+# ── mesh generation ─────────────────────────────────────────────────
+#  refine       = soil blocks whose (decomposed) surfaces get local
+#                 refinement before meshing
+#  refine_times = how often each is refined (the logs refine twice)
+[mesh]
+refine = fill
+refine_times = 2
+coarseness = 0.05           # relative element size (smaller = finer)
+enhanced_refinements = true
+global_scale = 1.2
+min_element_size = 0.005
+swept_meshing = false
+
+
+# ── water conditions ────────────────────────────────────────────────
+#  Reproduces the '_gotowater' step the reference models record between
+#  meshing and staged construction (the borehole 'head' already set the
+#  phreatic level, so nothing is changed there).
+[water]
+enabled = true
+
+
+# ── staged construction  [phase:<n>] in order ──────────────────────
+#  activate / deactivate: collection names on the model, options:
+#     Plates | EmbeddedBeams | Geogrids | SurfaceLoads | Volumes | ...
+#  soil_material + soil_block: in this phase, reassign ONLY the named
+#     soil block(s) to this material. Everything else keeps its initial
+#     material. Here the thin 'slab' fill cap becomes 'dolgu' while the
+#     natural 'kum' ground (incl. the 12x12x12 block) stays 'kum'.
+#     (soil_block is a comma list; omit soil_material to change nothing.)
+#  Optional deformation-control keys (per phase):
+#     use_default_iteration_params = false
+#     max_steps = 250
+#  Add 'Interfaces' to 'activate' if you enabled an [interface:*] section.
+[phase:1]
+activate = EmbeddedBeams, Geogrids
+soil_material = dolgu
+soil_block = slab
+
+[phase:2]
+activate = Plates, SurfaceLoads
+
+
+# ── output + run control ────────────────────────────────────────────
+[output]
+dir = output
+filename = pile_raft.p3d
+
+[run]
+calculate = true        # run the calculation after building
+view = true             # open the results viewer on the last phase
+select_mesh_points = true    # run _selectmeshpoints before calculating
+curve_node = (0, 0, 0)  # ALSO select a curve point there: search the node
+                        # closest to this coordinate, add it, press Update
+                        # (done in Plaxis Output — needs output_port above).
+                        # Remove this line to go back to manual selection.
+curve_node_from = plate # search the plate's nodes ("data from plate");
+                        # use 'any' to search all nodes instead

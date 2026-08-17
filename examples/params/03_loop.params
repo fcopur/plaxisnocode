@@ -1,0 +1,30 @@
+# Example 3 — a batch run with [loop].
+#
+# Each loop variable gets a SET of values in braces. The script builds one model
+# for every combination (the Cartesian product) and auto-names each project and
+# .p3d file after the combination.
+#
+#     python run.py examples/params/03_loop.params
+#
+# This builds 3 x 2 = 6 models:
+#   sweep_bh30_load1000   sweep_bh30_load2000
+#   sweep_bh45_load1000   sweep_bh45_load2000
+#   sweep_bh60_load1000   sweep_bh60_load2000
+#
+# Tip: preview the whole batch (names + validation) without touching Plaxis:
+#   python run.py --dry-run examples/params/03_loop.params
+
+[loop]
+$bh   = {30, 45, 60}          # borehole depth (m)
+$load = {1000, 2000}          # surface load magnitude (kPa)
+
+[project]
+title = sweep                 # final titles become sweep_bh30_load1000, ...
+
+[borehole]
+head = -$bh
+layers = -$bh
+
+[surface_load:top]
+corners = (-5,5,0), (5,5,0), (5,-5,0), (-5,-5,0)
+sigz = -$load                 # downward load; varies with the loop

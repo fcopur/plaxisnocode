@@ -1,0 +1,23 @@
+# Example 1 — the simplest override.
+#
+# An override only needs the sections/keys you want to change; everything else
+# falls back to defaults.params. Run it with:
+#
+#     python run.py examples/params/01_change_values.params
+#
+# This builds ONE model: the default pile-raft, but renamed and with a deeper
+# borehole and a stronger fill.
+
+[project]
+title = shallow_case
+
+[borehole]
+head = -40
+layers = -40           # single layer, bottom at z = -40
+
+[soil_material:dolgu]
+gammaUnsat = 22        # only this property changes; dolgu keeps the rest
+gammaSat = 22          # must be >= gammaUnsat
+
+[output]
+filename = shallow_case.p3d

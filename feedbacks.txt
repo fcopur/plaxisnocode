@@ -1,0 +1,13 @@
+# feedbacks.txt — your review channel (one of the two files you ever edit).
+#
+# After running the tasks in Plaxis, write here what looks wrong or should
+# change, in plain language. Any language works. The AI assistant reads this
+# file at the start of each work cycle, fixes the .params files accordingly,
+# and treats an item as done once it is implemented.
+#
+# This is a living file, not a permanent log: rewrite or clear it whenever
+# you like — git history keeps the old versions. Its counterpart is
+# instructions.txt, where you describe what you want built in the first
+# place.
+#
+# Write your notes below this line.
