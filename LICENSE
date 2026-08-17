@@ -19,3 +19,35 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+---
+
+DISCLAIMER (not part of the MIT License terms above; it neither adds to nor
+restricts the permissions granted, and is stated here so that it travels with
+the code)
+
+This software automates the *building* of geotechnical models. It does not
+perform, replace, or verify engineering judgement.
+
+The Software constructs geometry, materials, structural elements and
+calculation phases exactly as the parameter files describe them, including
+whatever is erroneous in them. It does not check that a model is physically
+sensible, that material parameters are appropriate for the ground being
+modelled, that the idealisation suits the problem, or that any computed result
+is meaningful. Numerical output produced with the help of this Software is not
+a design, a recommendation, or a certification of safety or fitness.
+
+Any model built with this Software, and any result derived from it, must be
+independently reviewed and approved by a qualified geotechnical engineer
+competent in the relevant jurisdiction before it is used for, or relied upon
+in, the design, assessment, or construction of anything. Responsibility for
+that review, and for any use of the results, rests entirely with the user.
+
+The "AS IS", "WITHOUT WARRANTY OF ANY KIND" and limitation-of-liability terms
+of the MIT License above are meant literally, and apply in full to this use.
+
+PLAXIS is a product of Bentley Systems, Incorporated. This project is an
+independent work: it is not affiliated with, endorsed by, or supported by
+Bentley Systems, and no warranty is made regarding its compatibility with any
+version of PLAXIS.

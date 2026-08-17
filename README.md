@@ -21,6 +21,13 @@ python run.py tasks/sand_Dr15.params                   # one study task (96-mode
 python run.py tasks                                    # every task in the tasks/ folder
 ```
 
+> ⚠️ **Engineering disclaimer.** This tool automates model *building*, not
+> engineering judgement: it builds exactly what the parameter files describe,
+> including whatever is wrong in them, and checks nothing about whether the
+> result is physically sensible. Every model and every result must be reviewed
+> by a qualified geotechnical engineer before it informs a design. See
+> [Caveats](#caveats).
+
 ---
 
 ## Contents
@@ -466,3 +473,7 @@ Released under the [MIT License](LICENSE) — free to use, modify and
 redistribute (including commercially). The one condition is **attribution**:
 keep the copyright and license notice, and please credit the source
 (this repository). Copyright © 2026 Fatih Çopur.
+
+The `LICENSE` file also carries an **engineering disclaimer** below the MIT
+terms — it does not change the permissions granted, but it travels with the
+code and should be read before any result is used in a design.
